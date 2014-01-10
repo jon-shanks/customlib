@@ -1,0 +1,16 @@
+customlib
+
+This is the customlib module, which is a place used to hold custom inbuilt cross-module functions
+and facts. This was originally created as a holder for the wrapper module for module_hiera_hash
+but will no doubt be required for other modules in the future.
+
+License
+-------
+
+Contact
+-------
+Jonathan Shanks
+
+Support
+-------
+
