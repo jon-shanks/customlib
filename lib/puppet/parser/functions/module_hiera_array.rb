@@ -21,14 +21,12 @@ module Puppet::Parser::Functions
     class_list = HieraPuppet.lookup('classes', default, self, override, :array) if class_list.empty? 
 
     if class_list.empty?
-      key, default, override = HieraPuppet.parse_args(args)
       merged_array = HieraPuppet.lookup(key, default, self, override, :array)
     else
       class_list.each do |k, _|
         begin
           elevel = self.ephemeral_level
           self.ephemeral_from({'klass'=>k})
-          key, default, override = HieraPuppet.parse_args(args)
           hiera_out = HieraPuppet.lookup(key, default, self, override, :array)
           merged_array << hiera_out
         ensure
