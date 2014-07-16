@@ -15,12 +15,17 @@ module Puppet::Parser::Functions
   ) do |*args|
 
     merged_array = Array.new
-    class_list = Puppet::Node.indirection.find(self['::fqdn']).classes
+    if Puppet::Node.indirection.find(self['::fqdn']).classes.empty?
+      key, default, override = HieraPuppet.parse_args(args)
+      class_list = HieraPuppet.lookup('classes', default, self, override, :array)
+    else
+      class_list = Puppet::Node.indirection.find(self['::fqdn']).classes
+    end
     if class_list.empty?
       key, default, override = HieraPuppet.parse_args(args)
       merged_array = HieraPuppet.lookup(key, default, self, override, :array)
     else
-      class_list.keys.each do |k|
+      class_list.each do |k, _|
         begin
           elevel = self.ephemeral_level
           self.ephemeral_from({'klass'=>k})
