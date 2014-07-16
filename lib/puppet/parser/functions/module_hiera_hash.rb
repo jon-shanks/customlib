@@ -16,12 +16,11 @@ module Puppet::Parser::Functions
   ) do |*args|
 
     merged_hash = Hash.new
-    if Puppet::Node.indirection.find(self['::fqdn']).classes.empty?
-      key, default, override = HieraPuppet.parse_args(args)
-      class_list = HieraPuppet.lookup("classes", default, self, override, :array)
-    else
-      class_list = Puppet::Node.indirection.find(self['::fqdn']).classes
-    end
+    key, default, override = HieraPuppet.parse_args(args)
+
+    class_list = Puppet::Node.indirection.find(self['::fqdn']).classes
+    class_list = HieraPuppet.lookup('classes', default, self, override, :array) if class_list.empty?
+   
     if class_list.empty?
       key, default, override = HieraPuppet.parse_args(args)
       merged_hash = HieraPuppet.lookup(key, default, self, override, :hash)
